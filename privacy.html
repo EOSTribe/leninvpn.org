@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LeninVPN — Политика конфиденциальности</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Oswald:wght@300;400;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --matrix-green: #00ff41;
+    --matrix-dark: #003b00;
+    --matrix-mid: #00a614;
+    --soviet-red: #cc0000;
+    --soviet-gold: #f5c518;
+    --bg-dark: #020c02;
+    --bg-panel: rgba(0, 20, 0, 0.85);
+    --text-primary: #c8ffc8;
+    --text-secondary: #5aff5a;
+    --border-glow: rgba(0,255,65,0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: 'PT Sans', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  #matrix-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    opacity: 0.12;
+    pointer-events: none;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 2px,
+      rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* HEADER */
+  header {
+    position: relative;
+    z-index: 10;
+    border-bottom: 1px solid var(--border-glow);
+    padding: 16px 0;
+    background: rgba(2, 12, 2, 0.92);
+    backdrop-filter: blur(4px);
+  }
+
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+  }
+
+  .logo-star {
+    width: 32px; height: 32px;
+    fill: var(--soviet-red);
+    filter: drop-shadow(0 0 6px rgba(204,0,0,0.7));
+    flex-shrink: 0;
+  }
+
+  .logo-text {
+    font-family: 'Oswald', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--matrix-green);
+    text-shadow: 0 0 12px var(--matrix-green);
+    text-transform: uppercase;
+  }
+
+  .logo-text span { color: var(--soviet-red); text-shadow: 0 0 12px var(--soviet-red); }
+
+  nav a {
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-left: 24px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  nav a:hover { color: var(--matrix-green); }
+
+  /* TICKER */
+  .ticker-bar {
+    position: relative;
+    z-index: 2;
+    background: rgba(0,10,0,0.9);
+    border-bottom: 1px solid var(--border-glow);
+    padding: 8px 0;
+    overflow: hidden;
+  }
+
+  .ticker-inner {
+    display: flex;
+    gap: 60px;
+    animation: ticker 28s linear infinite;
+    white-space: nowrap;
+  }
+
+  .ticker-item {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--soviet-red);
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  .ticker-item::before { content: '★ '; }
+
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* PAGE HEADER */
+  .page-hero {
+    position: relative;
+    z-index: 2;
+    padding: 64px 0 48px;
+    border-bottom: 1px solid var(--border-glow);
+    margin-bottom: 60px;
+  }
+
+  .page-eyebrow {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--soviet-red);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .page-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 20px; height: 1px;
+    background: var(--soviet-red);
+  }
+
+  .page-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--matrix-green);
+    text-shadow: 0 0 24px rgba(0,255,65,0.3);
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+
+  .page-title span { color: var(--soviet-red); text-shadow: 0 0 24px rgba(204,0,0,0.4); }
+
+  .page-meta {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: var(--matrix-mid);
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .page-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .page-meta-item::before {
+    content: '//';
+    color: rgba(0,166,20,0.4);
+  }
+
+  /* CONTENT */
+  .policy-body {
+    position: relative;
+    z-index: 2;
+    padding-bottom: 80px;
+  }
+
+  /* Section block */
+  .policy-section {
+    margin-bottom: 56px;
+    padding-left: 24px;
+    border-left: 2px solid rgba(204,0,0,0.4);
+    position: relative;
+  }
+
+  .policy-section::before {
+    content: '';
+    position: absolute;
+    left: -2px; top: 0;
+    width: 2px; height: 32px;
+    background: var(--soviet-red);
+    box-shadow: 0 0 8px rgba(204,0,0,0.6);
+  }
+
+  .section-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--soviet-red);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .section-heading {
+    font-family: 'Oswald', sans-serif;
+    font-size: 22px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--matrix-green);
+    text-shadow: 0 0 10px rgba(0,255,65,0.2);
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+
+  .subsection {
+    margin-bottom: 28px;
+  }
+
+  .subsection-heading {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: var(--soviet-gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(245,197,24,0.15);
+  }
+
+  p {
+    font-size: 15px;
+    color: var(--text-primary);
+    line-height: 1.8;
+    margin-bottom: 14px;
+    opacity: 0.88;
+  }
+
+  p:last-child { margin-bottom: 0; }
+
+  /* Data table */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14px;
+  }
+
+  .data-table th {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--soviet-gold);
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(245,197,24,0.25);
+    background: rgba(0,10,0,0.5);
+  }
+
+  .data-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(0,255,65,0.08);
+    color: var(--text-primary);
+    opacity: 0.85;
+    vertical-align: top;
+    line-height: 1.6;
+  }
+
+  .data-table tr:hover td {
+    background: rgba(0,30,0,0.4);
+  }
+
+  .data-table td:first-child {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: var(--matrix-green);
+    white-space: nowrap;
+    opacity: 1;
+  }
+
+  /* Highlight box */
+  .highlight-box {
+    border: 1px solid rgba(0,255,65,0.2);
+    background: rgba(0,20,0,0.6);
+    padding: 20px 24px;
+    margin: 20px 0;
+    position: relative;
+  }
+
+  .highlight-box::before {
+    content: '!';
+    position: absolute;
+    top: 18px; left: -12px;
+    width: 22px; height: 22px;
+    background: var(--matrix-green);
+    color: var(--bg-dark);
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 22px;
+    text-align: center;
+  }
+
+  .highlight-box p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--matrix-green);
+    opacity: 1;
+  }
+
+  /* Warning box */
+  .warning-box {
+    border: 1px solid rgba(204,0,0,0.3);
+    background: rgba(40,0,0,0.4);
+    padding: 20px 24px;
+    margin: 20px 0;
+  }
+
+  .warning-box p {
+    margin: 0;
+    font-size: 14px;
+    color: #ff9999;
+    opacity: 1;
+  }
+
+  /* Rights list */
+  .rights-list {
+    list-style: none;
+    margin: 16px 0;
+  }
+
+  .rights-list li {
+    font-size: 14px;
+    color: var(--text-primary);
+    opacity: 0.88;
+    padding: 8px 0 8px 24px;
+    border-bottom: 1px solid rgba(0,255,65,0.06);
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .rights-list li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: var(--soviet-red);
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    line-height: 1.3;
+  }
+
+  /* Contact block */
+  .contact-block {
+    border: 1px solid var(--border-glow);
+    background: rgba(0,15,0,0.7);
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 24px;
+  }
+
+  .contact-star {
+    font-size: 36px;
+    color: var(--soviet-gold);
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .contact-text p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--matrix-mid);
+    line-height: 1.7;
+    opacity: 1;
+  }
+
+  .contact-text a {
+    color: var(--matrix-green);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0,255,65,0.3);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    transition: border-color 0.2s;
+  }
+
+  .contact-text a:hover { border-color: var(--matrix-green); }
+
+  /* TOC */
+  .toc {
+    border: 1px solid var(--border-glow);
+    background: rgba(0,12,0,0.7);
+    padding: 28px 32px;
+    margin-bottom: 56px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .toc-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--soviet-red);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+
+  .toc-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 32px;
+  }
+
+  .toc-list li a {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: var(--matrix-mid);
+    text-decoration: none;
+    letter-spacing: 1px;
+    transition: color 0.2s;
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    padding: 5px 0;
+  }
+
+  .toc-list li a:hover { color: var(--matrix-green); }
+
+  .toc-num {
+    color: rgba(204,0,0,0.6);
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 2;
+    border-top: 1px solid var(--border-glow);
+    padding: 28px 0;
+    background: rgba(2,8,2,0.95);
+  }
+
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .footer-logo {
+    font-family: 'Oswald', sans-serif;
+    font-size: 16px;
+    letter-spacing: 3px;
+    color: var(--matrix-green);
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+
+  .footer-links { display: flex; gap: 20px; }
+
+  .footer-links a {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--matrix-mid);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--matrix-green); }
+
+  .footer-copy {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: rgba(0,166,20,0.35);
+  }
+
+  @media (max-width: 700px) {
+    .toc-list { grid-template-columns: 1fr; }
+    nav { display: none; }
+    .footer-inner { flex-direction: column; gap: 10px; }
+    .contact-block { flex-direction: column; }
+    .page-meta { flex-direction: column; gap: 6px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="matrix-canvas"></canvas>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">
+      <svg class="logo-star" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35"/>
+      </svg>
+      <div class="logo-text">Lenin<span>VPN</span></div>
+    </a>
+    <nav>
+      <a href="index.html#features">Функции</a>
+      <a href="index.html#protocols">Протоколы</a>
+      <a href="https://github.com/EOSTribe/leninvpn">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<div class="ticker-bar">
+  <div class="ticker-inner">
+    <span class="ticker-item">Политика конфиденциальности</span>
+    <span class="ticker-item">Вступила в силу: 20.02.2026</span>
+    <span class="ticker-item">Мы не храним логи</span>
+    <span class="ticker-item">Ваши данные принадлежат вам</span>
+    <span class="ticker-item">GPL-3.0</span>
+    <span class="ticker-item">Политика конфиденциальности</span>
+    <span class="ticker-item">Вступила в силу: 20.02.2026</span>
+    <span class="ticker-item">Мы не храним логи</span>
+    <span class="ticker-item">Ваши данные принадлежат вам</span>
+    <span class="ticker-item">GPL-3.0</span>
+  </div>
+</div>
+
+<div class="page-hero">
+  <div class="container">
+    <div class="page-eyebrow">Документация</div>
+    <h1 class="page-title">Политика<br><span>конфиденциальности</span></h1>
+    <div class="page-meta">
+      <div class="page-meta-item">Вступила в силу: 20.02.2026</div>
+      <div class="page-meta-item">LeninVPN — на основе AmneziaVPN</div>
+      <div class="page-meta-item">Лицензия: GPL-3.0</div>
+    </div>
+  </div>
+</div>
+
+<div class="policy-body">
+  <div class="container">
+
+    <div class="highlight-box">
+      <p>LeninVPN не ведёт логов активности пользователей. Мы не отслеживаем трафик, посещённые сайты или время сессий. Ваши данные — это ваше дело.</p>
+    </div>
+
+    <!-- TOC -->
+    <div class="toc">
+      <div class="toc-title">// Содержание</div>
+      <ul class="toc-list">
+        <li><a href="#s1"><span class="toc-num">01</span> Что мы предлагаем</a></li>
+        <li><a href="#s2"><span class="toc-num">02</span> Какие данные и зачем</a></li>
+        <li><a href="#s3"><span class="toc-num">03</span> Как мы используем данные</a></li>
+        <li><a href="#s4"><span class="toc-num">04</span> Передача третьим лицам</a></li>
+        <li><a href="#s5"><span class="toc-num">05</span> Cookies и аналитика</a></li>
+        <li><a href="#s6"><span class="toc-num">06</span> Безопасность</a></li>
+        <li><a href="#s7"><span class="toc-num">07</span> Международная передача</a></li>
+        <li><a href="#s8"><span class="toc-num">08</span> Хранение данных</a></li>
+        <li><a href="#s9"><span class="toc-num">09</span> Ваши права</a></li>
+        <li><a href="#s10"><span class="toc-num">10</span> Несовершеннолетние</a></li>
+        <li><a href="#s11"><span class="toc-num">11</span> Ограничение ответственности</a></li>
+        <li><a href="#s12"><span class="toc-num">12</span> Обновления политики</a></li>
+      </ul>
+    </div>
+
+    <!-- SECTION 1 -->
+    <div class="policy-section" id="s1">
+      <div class="section-num">// 01</div>
+      <h2 class="section-heading">Что мы предлагаем и как это работает</h2>
+
+      <p>LeninVPN — это открытое приложение для создания VPN-соединения. Мы предоставляем инструмент для настройки VPN на собственном сервере и поддерживаем широкий набор протоколов шифрования.</p>
+
+      <div class="subsection">
+        <div class="subsection-heading">1.1 — VPN на собственном сервере</div>
+        <p>Пользователь может развернуть VPN-сервер, введя данные доступа (IP-адрес, логин, пароль или ключ) в клиент LeninVPN. Мы не собираем, не сохраняем и не передаём эти данные — они остаются исключительно на устройстве пользователя.</p>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-heading">1.2 — Импорт конфигурации</div>
+        <p>Пользователь может подключиться, вставив готовый конфигурационный ключ, отсканировав QR-код или загрузив файл конфигурации. Все данные обрабатываются локально и не покидают устройство.</p>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-heading">1.3 — Партнёрские сервисы</div>
+        <p>Приложение может отображать ссылки на сторонние VPN-сервисы. При переходе на такие сервисы применяется их собственная политика конфиденциальности. LeninVPN не несёт ответственности за практики сбора данных третьих сторон.</p>
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="policy-section" id="s2">
+      <div class="section-num">// 02</div>
+      <h2 class="section-heading">Какие данные мы собираем и зачем</h2>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Тип данных</th>
+            <th>Цель сбора</th>
+            <th>Срок хранения</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Email</td>
+            <td>Связь, подписки, партнёрские выплаты</td>
+            <td>До отзыва согласия</td>
+          </tr>
+          <tr>
+            <td>ID устройства</td>
+            <td>Привязка конфигураций, восстановление</td>
+            <td>Срок действия сервиса</td>
+          </tr>
+          <tr>
+            <td>Версия ОС / приложения</td>
+            <td>Совместимость и улучшение продукта</td>
+            <td>Анонимно, бессрочно</td>
+          </tr>
+          <tr>
+            <td>IP-адрес</td>
+            <td>Только временно — анализ блокировок и защита инфраструктуры от злоупотреблений</td>
+            <td>Не хранится (кроме случаев нарушений)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="subsection" style="margin-top: 24px;">
+        <div class="subsection-heading">Что мы не собираем никогда</div>
+        <ul class="rights-list">
+          <li>Информацию о VPN-трафике и посещённых сайтах</li>
+          <li>Данные третьих сторон (Google, Apple и других OAuth-провайдеров)</li>
+          <li>Данные о платёжных картах или криптовалютных транзакциях пользователей</li>
+          <li>Содержимое сообщений и переданных файлов</li>
+          <li>Геолокацию в реальном времени</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="policy-section" id="s3">
+      <div class="section-num">// 03</div>
+      <h2 class="section-heading">Как мы используем данные</h2>
+
+      <p>Мы используем собранные данные исключительно в следующих целях:</p>
+
+      <ul class="rights-list">
+        <li>Предоставление доступа к сервисам и поддержка их стабильной работы</li>
+        <li>Коммуникация с пользователями по их запросу</li>
+        <li>Предотвращение злоупотреблений, спама и DDoS-атак</li>
+        <li>Анализ анонимизированной статистики для улучшения продукта</li>
+        <li>Отправка предложений и новостей о продукте (с возможностью отписки в любой момент)</li>
+      </ul>
+
+      <div class="highlight-box" style="margin-top: 20px;">
+        <p>VPN-трафик и активность пользователей не используются для аналитики, рекламы или передачи третьим лицам. Это архитектурный принцип, а не просто политика.</p>
+      </div>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="policy-section" id="s4">
+      <div class="section-num">// 04</div>
+      <h2 class="section-heading">Передача данных третьим лицам</h2>
+
+      <p>Мы не продаём и не передаём ваши данные третьим лицам. Исключения строго ограничены:</p>
+
+      <ul class="rights-list">
+        <li>Платёжные провайдеры — только при оформлении подписки на сторонние сервисы (email и IP, если требуется платёжным шлюзом)</li>
+        <li>Государственные органы — исключительно на основании официальных законных запросов, поданных через правовые каналы в соответствии с законодательством Российской Федерации и международными правовыми процедурами</li>
+        <li>Сторонние API-сервисы, используемые в приложении (например, Web3Forms для контактных форм)</li>
+      </ul>
+
+      <div class="warning-box">
+        <p>Поскольку мы не ведём логов подключений, трафика или метаданных VPN-сессий, мы технически не способны предоставить информацию о том, какой пользователь был подключён к конкретному серверу в конкретное время.</p>
+      </div>
+    </div>
+
+    <!-- SECTION 5 -->
+    <div class="policy-section" id="s5">
+      <div class="section-num">// 05</div>
+      <h2 class="section-heading">Cookies и аналитика</h2>
+
+      <p>На сайте LeninVPN мы используем минимальный набор технологий отслеживания:</p>
+
+      <ul class="rights-list">
+        <li>Куки языковых настроек — для корректного отображения интерфейса</li>
+        <li>Анонимизированная аналитика через Plausible (self-hosted) и Cloudflare Insights — только агрегированные данные: визиты, источники переходов, регионы и типы устройств</li>
+      </ul>
+
+      <p>Персональные данные через аналитику не собираются. Отключение куки в браузере не ограничивает доступ к функциям приложения.</p>
+    </div>
+
+    <!-- SECTION 6 -->
+    <div class="policy-section" id="s6">
+      <div class="section-num">// 06</div>
+      <h2 class="section-heading">Безопасность</h2>
+
+      <p>Мы применяем современные технические, организационные и физические меры защиты для предотвращения несанкционированного доступа, изменения или утраты данных.</p>
+
+      <ul class="rights-list">
+        <li>Децентрализованная инфраструктура — без единой точки отказа</li>
+        <li>Доступ к системам на основе ролевой модели и принципа минимальных привилегий</li>
+        <li>Регулярные проверки безопасности, мониторинг и аудиты критических компонентов</li>
+        <li>Сквозное шифрование всех VPN-соединений</li>
+      </ul>
+    </div>
+
+    <!-- SECTION 7 -->
+    <div class="policy-section" id="s7">
+      <div class="section-num">// 07</div>
+      <h2 class="section-heading">Международная передача данных</h2>
+
+      <p>В случае передачи данных за пределы страны регистрации мы применяем стандартные договорные условия, одобрённые регуляторами, а также используем минимизацию данных, шифрование и анонимизацию. По запросу мы предоставим подробную информацию.</p>
+    </div>
+
+    <!-- SECTION 8 -->
+    <div class="policy-section" id="s8">
+      <div class="section-num">// 08</div>
+      <h2 class="section-heading">Хранение данных</h2>
+
+      <p>Данные хранятся только столько, сколько необходимо для предоставления услуг или требуется по закону. После истечения срока хранения данные удаляются или анонимизируются без возможности восстановления.</p>
+    </div>
+
+    <!-- SECTION 9 -->
+    <div class="policy-section" id="s9">
+      <div class="section-num">// 09</div>
+      <h2 class="section-heading">Ваши права</h2>
+
+      <p>Вы имеете право:</p>
+
+      <ul class="rights-list">
+        <li>Получить доступ к вашим персональным данным</li>
+        <li>Исправить или удалить ваши данные</li>
+        <li>Отозвать согласие на обработку в любой момент</li>
+        <li>Ограничить или возразить против обработки данных</li>
+        <li>Подать жалобу в надзорный орган по защите персональных данных</li>
+      </ul>
+
+      <div class="contact-block">
+        <div class="contact-star">★</div>
+        <div class="contact-text">
+          <p>Для реализации ваших прав или вопросов о политике конфиденциальности свяжитесь с нами:<br>
+          <a href="mailto:privacy@leninvpn.org">privacy@leninvpn.org</a>
+          &nbsp;&nbsp;·&nbsp;&nbsp;
+          <a href="https://github.com/EOSTribe/leninvpn/issues" target="_blank">GitHub Issues</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 10 -->
+    <div class="policy-section" id="s10">
+      <div class="section-num">// 10</div>
+      <h2 class="section-heading">Несовершеннолетние</h2>
+
+      <p>Наши сервисы не предназначены для лиц младше 16 лет. Если нам станет известно, что ребёнок предоставил персональные данные, мы немедленно их удалим. Родители и опекуны могут обратиться к нам напрямую.</p>
+    </div>
+
+    <!-- SECTION 11 -->
+    <div class="policy-section" id="s11">
+      <div class="section-num">// 11</div>
+      <h2 class="section-heading">Ограничение ответственности и допустимое использование</h2>
+
+      <p>Сервисы предоставляются «как есть» и «по мере доступности». Мы не гарантируем бесперебойную работу, скорость или пригодность для конкретных целей. LeninVPN не несёт ответственности за:</p>
+
+      <ul class="rights-list">
+        <li>Косвенные или последовательные убытки, включая потерю прибыли или данных</li>
+        <li>Перебои в работе сервиса, вызванные внешними факторами или действиями третьих лиц</li>
+        <li>Последствия использования сервиса в целях, нарушающих применимое законодательство</li>
+      </ul>
+
+      <div class="subsection" style="margin-top: 28px;">
+        <div class="subsection-heading">11.1 — Допустимое использование</div>
+        <p>Пользователи обязуются использовать VPN-сервис исключительно в законных целях. Запрещается:</p>
+        <ul class="rights-list">
+          <li>Незаконная деятельность: взлом, распространение вредоносного ПО, мошенничество</li>
+          <li>Рассылка спама, фишинг и мошеннические сообщения</li>
+          <li>Распространение и хранение контента, нарушающего авторские права</li>
+          <li>Атаки на сети или сервисы третьих лиц (DDoS и иные)</li>
+          <li>Действия, причиняющие вред другим пользователям или инфраструктуре</li>
+        </ul>
+        <p>Мы не ведём логов активности и не мониторим трафик. Однако при получении обоснованных уведомлений о нарушениях мы вправе принять меры по защите инфраструктуры.</p>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-heading">11.2 — Сторонние ресурсы</div>
+        <p>LeninVPN не несёт ответственности за материалы, размещённые или переданные пользователями через наши сервисы. Ссылки на сторонние сайты предоставляются исключительно для удобства пользователей.</p>
+      </div>
+    </div>
+
+    <!-- SECTION 12 -->
+    <div class="policy-section" id="s12">
+      <div class="section-num">// 12</div>
+      <h2 class="section-heading">Обновления политики</h2>
+
+      <p>Настоящая Политика может обновляться. Все изменения публикуются на этой странице с новой датой вступления в силу. Рекомендуем периодически проверять актуальность документа. Продолжение использования сервиса после публикации изменений означает ваше согласие с ними.</p>
+
+      <div class="contact-block" style="margin-top: 32px;">
+        <div class="contact-star">⚑</div>
+        <div class="contact-text">
+          <p>
+            LeninVPN основан на <a href="https://amnezia.org" target="_blank">AmneziaVPN</a> — открытом VPN-клиенте, разработанном командой Amnezia. Настоящая политика адаптирована из оригинальной политики конфиденциальности AmneziaVPN. Исходный код LeninVPN доступен на <a href="https://github.com/EOSTribe/leninvpn" target="_blank">GitHub</a> под лицензией GPL-3.0.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">LeninVPN</div>
+    <div class="footer-links">
+      <a href="index.html">Главная</a>
+      <a href="https://github.com/EOSTribe/leninvpn">GitHub</a>
+      <a href="https://amnezia.org">AmneziaVPN</a>
+    </div>
+    <div class="footer-copy">GPL-3.0 · На основе AmneziaVPN</div>
+  </div>
+</footer>
+
+<script>
+const canvas = document.getElementById('matrix-canvas');
+const ctx = canvas.getContext('2d');
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+const chars = '01アイウエオカキクケコ';
+const fontSize = 14;
+let columns = Math.floor(canvas.width / fontSize);
+let drops = Array(columns).fill(1);
+function draw() {
+  ctx.fillStyle = 'rgba(2, 12, 2, 0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#00ff41';
+  ctx.font = fontSize + 'px monospace';
+  for (let i = 0; i < drops.length; i++) {
+    const char = chars[Math.floor(Math.random() * chars.length)];
+    ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+    drops[i]++;
+  }
+}
+setInterval(draw, 55);
+window.addEventListener('resize', () => {
+  resize();
+  columns = Math.floor(canvas.width / fontSize);
+  drops = Array(columns).fill(1);
+});
+
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>
