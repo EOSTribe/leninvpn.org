@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeninVPN — Privacy Policy</title>
+  <style>
+    :root {
+      --red: #c0392b;
+      --dark: #1a1a1a;
+      --mid: #333;
+      --light: #f5f5f5;
+      --muted: #666;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #fff;
+      color: var(--dark);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+    header {
+      background: var(--dark);
+      color: #fff;
+      padding: 48px 24px 36px;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    header h1 span { color: var(--red); }
+    header p {
+      margin-top: 8px;
+      color: #aaa;
+      font-size: 0.9rem;
+    }
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .badge {
+      background: #2a2a2a;
+      border: 1px solid #444;
+      color: #ccc;
+      font-size: 0.78rem;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    main {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+    .toc {
+      background: var(--light);
+      border-left: 4px solid var(--red);
+      padding: 20px 24px;
+      margin-bottom: 48px;
+      border-radius: 0 6px 6px 0;
+    }
+    .toc h2 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .toc ol {
+      padding-left: 20px;
+    }
+    .toc li {
+      margin-bottom: 4px;
+    }
+    .toc a {
+      color: var(--mid);
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+    .toc a:hover { color: var(--red); }
+    section {
+      margin-bottom: 48px;
+    }
+    .section-num {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 6px;
+    }
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 16px;
+    }
+    p { margin-bottom: 14px; }
+    ul {
+      padding-left: 20px;
+      margin-bottom: 14px;
+    }
+    li { margin-bottom: 6px; }
+    a { color: var(--red); }
+    footer {
+      background: var(--light);
+      text-align: center;
+      padding: 24px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      border-top: 1px solid #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1><span>Lenin</span>VPN</h1>
+  <p>Privacy Policy &nbsp;·&nbsp; Effective Date: 20 February 2026</p>
+  <div class="badges">
+    <span class="badge">No Activity Logs</span>
+    <span class="badge">No Traffic Monitoring</span>
+    <span class="badge">No User Tracking</span>
+    <span class="badge">Self-Hosted VPN</span>
+    <span class="badge">Open Source · GPL-3.0</span>
+    <span class="badge">GDPR-Aligned</span>
+  </div>
+</header>
+
+<main>
+
+  <nav class="toc">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#section-1">What We Offer and How It Works</a></li>
+      <li><a href="#section-2">Data We Do Not Collect</a></li>
+      <li><a href="#section-3">Local Data Storage</a></li>
+      <li><a href="#section-4">Third-Party Services</a></li>
+      <li><a href="#section-5">Security</a></li>
+      <li><a href="#section-6">Children</a></li>
+      <li><a href="#section-7">Limitation of Liability and Acceptable Use</a></li>
+      <li><a href="#section-8">Updates and Contact</a></li>
+    </ol>
+  </nav>
+
+  <section id="section-1">
+    <span class="section-num">01</span>
+    <h2>What We Offer and How It Works</h2>
+    <p>LeninVPN is a free, open-source VPN client based on AmneziaVPN. It allows you to set up a VPN on your own server, supporting self-hosted configurations across multiple protocols including AmneziaWG, WireGuard, OpenVPN, and others.</p>
+    <p><strong>Self-Hosted VPN Setup.</strong> You connect to a VPN server that you own and control. To set it up, you enter your server's IP address, SSH login, and password or key directly into the LeninVPN client. This information never leaves your device and is never transmitted to LeninVPN or any third party.</p>
+    <p><strong>Configuration Import.</strong> You may also connect by pasting a configuration key, scanning a QR code, or importing a configuration file. All such data is processed entirely on your device.</p>
+  </section>
+
+  <section id="section-2">
+    <span class="section-num">02</span>
+    <h2>Data We Do Not Collect</h2>
+    <p>LeninVPN does not collect, store, process, or transmit any personal data whatsoever. This applies to the app and to us as its developers.</p>
+    <p>We do not collect:</p>
+    <ul>
+      <li>Names, email addresses, or any contact information</li>
+      <li>Device identifiers or hardware information</li>
+      <li>IP addresses (yours or your server's)</li>
+      <li>VPN usage data, connection logs, or session metadata</li>
+      <li>Browsing history or visited websites</li>
+      <li>Crash reports or diagnostics</li>
+      <li>Any analytics or telemetry</li>
+    </ul>
+    <p>Because we collect no data, there is nothing to retain, share, sell, or disclose — ever.</p>
+  </section>
+
+  <section id="section-3">
+    <span class="section-num">03</span>
+    <h2>Local Data Storage</h2>
+    <p>The only data stored by the app is the VPN configuration you enter yourself (server address, protocol settings, and credentials). This data is saved locally on your device using the operating system's standard secure storage mechanisms. It is never uploaded, synced, or accessible to us.</p>
+  </section>
+
+  <section id="section-4">
+    <span class="section-num">04</span>
+    <h2>Third-Party Services</h2>
+    <p>The LeninVPN app does not integrate any third-party SDKs, analytics libraries, advertising networks, or tracking services.</p>
+    <p>The app may display links to external websites or resources for user convenience. When you visit those external sites, their own privacy policies apply. LeninVPN is not responsible for any data practices of third-party websites.</p>
+  </section>
+
+  <section id="section-5">
+    <span class="section-num">05</span>
+    <h2>Security</h2>
+    <p>All VPN traffic is end-to-end encrypted between your device and your own server using industry-standard protocols (AmneziaWG, WireGuard, OpenVPN, etc.). Because we collect no data and operate no shared servers, there is no LeninVPN infrastructure that could be breached to expose your information.</p>
+    <p>LeninVPN is open source (GPL-3.0). You can inspect the full source code at: <a href="https://github.com/EOSTribe/leninvpn" target="_blank" rel="noopener">github.com/EOSTribe/leninvpn</a>.</p>
+  </section>
+
+  <section id="section-6">
+    <span class="section-num">06</span>
+    <h2>Children</h2>
+    <p>LeninVPN does not knowingly collect any data from anyone, including children. Our services are not directed at individuals under the age of 13 (or 16 where applicable under GDPR). Since we collect no data at all, no special measures regarding children's data are required.</p>
+  </section>
+
+  <section id="section-7">
+    <span class="section-num">07</span>
+    <h2>Limitation of Liability and Acceptable Use</h2>
+    <p>Our services are provided "as is" and "as available." We make no warranties regarding uninterrupted operation, speed, security, or fitness for any particular purpose.</p>
+    <p><strong>Acceptable Use.</strong> Users agree to use LeninVPN only for lawful purposes. You must not use the app to:</p>
+    <ul>
+      <li>Engage in illegal activities such as hacking, malware distribution, or fraud</li>
+      <li>Send spam, phishing, or deceptive messages</li>
+      <li>Distribute content that infringes copyrights or violates applicable law</li>
+      <li>Conduct attacks on third-party networks or services (including DDoS)</li>
+      <li>Harm other users, infrastructure, or partners</li>
+    </ul>
+    <p>LeninVPN does not monitor or log user traffic and is technically unable to do so.</p>
+  </section>
+
+  <section id="section-8">
+    <span class="section-num">08</span>
+    <h2>Updates and Contact</h2>
+    <p>This policy may be updated from time to time. All changes will be posted in the app repository with a new effective date. Continued use of the app after changes are published constitutes acceptance of the updated policy.</p>
+    <p>For questions or concerns, please open an issue at: <a href="https://github.com/EOSTribe/leninvpn/issues" target="_blank" rel="noopener">github.com/EOSTribe/leninvpn/issues</a>.</p>
+  </section>
+
+</main>
+
+<footer>
+  <p>LeninVPN is built upon <a href="https://github.com/amnezia-vpn/amnezia-client" target="_blank" rel="noopener">AmneziaVPN</a>, an outstanding open-source VPN client by the Amnezia team. Distributed under the GPL-3.0 license.</p>
+  <p style="margin-top:8px;">© 2026 LeninVPN · <a href="https://github.com/EOSTribe/leninvpn">EOSTribe/leninvpn</a></p>
+</footer>
+
+</body>
+</html>
